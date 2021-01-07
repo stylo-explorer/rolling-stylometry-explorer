@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.book-view {
+  display: flex;
+  flex-grow: 1;
+
+  app-book {
+    flex: 8;
+    box-sizing: border-box;
+    position: relative;
+  }
+  app-book-preview {
+    flex: 2;
+  }
+}

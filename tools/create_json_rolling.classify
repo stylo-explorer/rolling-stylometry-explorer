@@ -1,0 +1,46 @@
+library(stylo)
+library(rjson)
+table = list() 
+
+# Choose settings for stylo analysis
+delete.pronouns = FALSE
+corpus.lang = "English.all"
+for (mfw in seq(from=4000, to=5000, by=100)) {
+    result = rolling.classify(analyzed.features = "c", ngram.size = 3, mfw=mfw, slice.size = 5000, slice.overlap = 4500, classification.method = "svm", delete.pronouns=delete.pronouns, corpus.lang=corpus.lang)
+    sequences = c()
+    authors = c()
+    for (i in 1:length(result$classification.results)) {
+        center = as.numeric(names(result$classification.results)[i])
+
+
+        sequenceResults = c()
+        for(j in 1:length(result$classification.rankings[i,])) {
+            autorData = c()
+            autorData[["author"]] = result$classification.rankings[i,][j]
+            authors = append(authors, result$classification.rankings[i,][j])
+            autorData[["score"]] = result$classification.scores[i,][j]
+            sequenceResults[[j]] = autorData
+        }
+        sequences[[i]] = c("start" = center - 2500, "end" = center + 2500, "results" = list(sequenceResults))
+
+        
+    }
+    
+    authors = authors[!duplicated(authors)]
+    authors = sort(authors)
+    farbe = assign.plot.colors(authors, opacity=0.3)
+    row = c("mfw" = mfw, "data" = list(sequences))
+    row[["language"]] = corpus.lang
+    row[["color"]] = farbe
+    
+    if (delete.pronouns) {
+        row[["ignoredWords"]] = stylo.pronouns(corpus.lang = corpus.lang)
+    }
+    row = list(row)
+
+    table = append(table, row)
+}
+
+exportJson = toJSON(table)
+write(exportJson, "classification.json")
+

@@ -1,0 +1,60 @@
+<div class="parent-div" style="text-align: center">
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Settings</mat-label>
+      <mat-select [value]="classification.type$ | async">
+        <mat-option
+          *ngFor="let config of classification.availableTypes$ | async"
+          [value]="config"
+          (click)="classification.type$.next(config)"
+          >{{ config }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-button [matMenuTriggerFor]="colorMenu">
+      <button mat-button>Color Legend</button>
+    </button>
+    <mat-menu #colorMenu="matMenu" yPosition="above">
+      <mat-card
+        class="color-codes"
+        *ngFor="let color of colors$ | async"
+        [ngStyle]="{ 'background-color': color[1] }"
+        >{{ color[0] }}
+      </mat-card>
+    </mat-menu>
+  </div>
+  <div>
+    <mat-slider
+      thumbLabel
+      [displayWith]="formatLabel"
+      [step]="classification.mfwStep$ | async"
+      [min]="classification.mfwMin$ | async"
+      [max]="classification.mfwMax$ | async"
+      [tickInterval]="1"
+      [value]="classification.mfw$ | async"
+      (change)="classification.mfw = $event.value"
+    >
+    </mat-slider>
+
+    {{ classification.mfw$ | async }} / {{ classification.mfwMax$ | async }} MFW
+  </div>
+  <div>
+    <mat-slide-toggle
+      (change)="classification.colorGradient$.next($event.checked)"
+      >Gradient</mat-slide-toggle
+    >
+  </div>
+  <div>
+    <mat-slide-toggle [(ngModel)]="classification.enableTooltip">
+      Tooltip
+    </mat-slide-toggle>
+  </div>
+</div>
+<a
+  *ngIf="showGithub"
+  href="https://github.com/stylo-explorer/rolling-classify-visualizer"
+  target="_blank"
+>
+  <div class="github-logo" aria-label="Github Logo"></div>
+</a>

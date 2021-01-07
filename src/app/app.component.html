@@ -1,0 +1,30 @@
+<nav mat-tab-nav-bar>
+  <a mat-tab-link (click)="currentView = 'explorer'"
+    ><mat-icon aria-hidden="false" aria-label="Explorer Icon"
+      >library_books
+    </mat-icon>
+    ‎‏‏‎ ‎‏‏‎ Explorer
+  </a>
+
+  <a mat-tab-link (click)="currentView = 'side-by-side'"
+    ><mat-icon aria-hidden="false" aria-label="Side by Side Icon"
+      >library_add
+    </mat-icon>
+    ‎‏‏‎ ‎‏‏‎ Side by Side
+  </a>
+  <a mat-tab-link (click)="currentView = 'config'"
+    ><mat-icon aria-hidden="false" aria-label="Config Icon">settings</mat-icon>
+    ‏‏‎ ‎‏‏‎‎‏‏‎ ‎Config
+  </a>
+  <!--<a mat-tab-link (click)="currentView = 'summary'"
+    ><mat-icon aria-hidden="false" aria-label="Summary Icon"
+      >analytics</mat-icon
+    >
+    ‏‏‎ ‎‏‏‎‎‏‏‎ Summary
+  </a> -->
+</nav>
+
+<app-explorer *ngIf="currentView == 'explorer'"></app-explorer>
+<app-config *ngIf="currentView == 'config'"></app-config>
+<app-side-by-side *ngIf="currentView == 'side-by-side'"></app-side-by-side>
+<!--<app-summary *ngIf="currentView == 'summary'"></app-summary>-->

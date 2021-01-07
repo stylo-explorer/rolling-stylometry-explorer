@@ -1,0 +1,56 @@
+<div class="cite-div">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Stylo Configuration</mat-card-title>
+      <mat-card-subtitle
+        >Information about possible authors, analyzed text and stylo
+        configurations
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-tab-group class="cite-tabs">
+      <mat-tab label="Authors">
+        <mat-form-field class="example-full-width">
+          <mat-label>Authors</mat-label>
+          <textarea
+            matInput
+            placeholder="  "
+            [cdkTextareaAutosize]="true"
+            enabled="true"
+            >{{ authorNames((data.authorData$ | async) || []) }}
+</textarea
+          >
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Analyzed Text">
+        <mat-form-field class="example-full-width">
+          <mat-label>Analyzed Text</mat-label>
+          <textarea
+            matInput
+            placeholder="  "
+            [cdkTextareaAutosize]="true"
+            enabled="true"
+          >
+Title: {{ data.title$ | async }} 
+Year: {{ data.year$ | async }}
+</textarea
+          >
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab
+        *ngFor="let configuration of data.availableClassfications$ | async"
+        [label]="configuration.name"
+      >
+        <mat-form-field class="example-full-width">
+          <mat-label>{{ configuration.name }}</mat-label>
+          <textarea
+            matInput
+            placeholder="  "
+            [cdkTextareaAutosize]="true"
+            enabled="true"
+            >{{ configuration.configurations }}
+          </textarea>
+        </mat-form-field>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

@@ -1,0 +1,17 @@
+<div #bookContent style="position: absolute; padding: 1em 5em">
+  <span
+    *ngFor="
+      let segment of classification.textSegments$ | async;
+      trackBy: trackByStart
+    "
+    [id]="'segment-' + segment.start"
+    [style.background-color]="classification.toRgb(segment.color)"
+    [matTooltip]="classification.enableTooltip ? scoreAuthors(segment) : ''"
+    [matTooltipClass]="'line-break-tooltip'"
+    [matTooltipDisabled]="!classification.enableTooltip"
+    [matTooltipShowDelay]="700"
+    [matTooltipHideDelay]="800"
+    matTooltipPosition="right"
+    >{{ segment.text }}&nbsp;</span
+  >
+</div>

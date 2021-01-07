@@ -1,0 +1,13 @@
+<canvas #canvas style="height: 100%;"></canvas>
+<canvas
+  #position
+  style="height: 100%;"
+  (click)="scrollTo($event)"
+  (mousedown)="dragging = true"
+  (mouseup)="dragging = false"
+  (mouseleave)="dragging = false"
+  (mousemove)="dragTo($event)"
+  (touchmove)="dragTo($event)"
+  (touchstart)="dragging = true"
+  (touchend)="dragging = false"
+></canvas>
