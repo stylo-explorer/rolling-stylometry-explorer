@@ -10,7 +10,8 @@ The Rolling Stylometry Explorer is a web application to visualize rolling.classi
 
 
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](https://opensource.org/licenses/MIT) [![Website shields.io](https://img.shields.io/website-up-down-black-red/http/shields.io.svg)](https://stylo-explorer.jnugh.de/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-black.svg?style=flat-square)](http://makeapullrequest.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](https://opensource.org/licenses/MIT) [![Website shields.io](https://img.shields.io/website-up-down-black-red/http/shields.io.svg)](https://stylo-explorer.jnugh.de/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-black.svg?style=flat-square)](http://makeapullrequest.com) <a href="https://doi.org/10.5281/zenodo.4438291"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4438291.svg" alt="DOI"></a>
+
 
 <img src="/docs/baseline_supervised_user_circle_black_48dp.png" width="15"> **Authors**: Jonas Osburg, Lilly Osburg </img>
 
