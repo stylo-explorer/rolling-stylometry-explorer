@@ -1,6 +1,11 @@
-<div #bookContent style="position: absolute; padding: 1em 5em">
+<cdk-virtual-scroll-viewport
+  #bookContent
+  [segmentSizes]="segmentPositions | async"
+  (scroll)="viewportScroll()"
+  (scrolledIndexChange)="scrolledIndexChange($event)"
+>
   <span
-    *ngFor="
+    *cdkVirtualFor="
       let segment of classification.textSegments$ | async;
       trackBy: trackByStart
     "
@@ -14,4 +19,4 @@
     matTooltipPosition="right"
     >{{ segment.text }}&nbsp;</span
   >
-</div>
+</cdk-virtual-scroll-viewport>

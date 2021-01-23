@@ -85,7 +85,7 @@ export class ClassificationService {
   public enableTooltip = false;
   public readonly mfw$ = new BehaviorSubject<number>(0);
   public readonly classification$: Observable<Array<ClassificationData>>;
-
+  
   public readonly type$ = new BehaviorSubject<string>('');
   public readonly mfwMin$: Observable<number>;
   public readonly mfwMax$: Observable<number>;
@@ -94,6 +94,7 @@ export class ClassificationService {
   public readonly textSegments$: Observable<Array<ClassifiedTextSegment>>;
   public readonly chapterSegments$: Observable<Array<number>>;
   public readonly colorGradient$ = new BehaviorSubject(false);
+  public readonly bookViewportWidth$ = new ReplaySubject<number>(0);
 
   public readonly availableTypes$: Observable<string[]>;
   public readonly colors$: Observable<Map<string, Color>>;

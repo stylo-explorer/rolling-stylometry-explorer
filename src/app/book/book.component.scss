@@ -5,6 +5,11 @@
   text-align: justify;
 }
 
+cdk-virtual-scroll-viewport {
+  height: 100%;
+  margin: 0 1em;
+}
+
 span {
   cursor: pointer;
   border: 0.5px dotted transparent;

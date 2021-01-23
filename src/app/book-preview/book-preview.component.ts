@@ -14,6 +14,7 @@ import {
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { ScrollService } from '../book/scroll.service';
 import ResizeObserver from 'resize-observer-polyfill';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-book-preview',
@@ -27,37 +28,59 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
   private position: ElementRef<HTMLCanvasElement>;
   private height$ = new ReplaySubject<number>(1);
   private width$ = new ReplaySubject<number>(1);
+  private charWidth$ = new ReplaySubject<number>(6.5);
+
+  private segmentHeights: number[];
+  private renderSegmentHeights: number[];
 
   public dragging = false;
   private resizeObserver: ResizeObserver;
 
   constructor(
     private classification: ClassificationService,
-    private scrollService: ScrollService
+    private scrollService: ScrollService,
+    private hostEl: ElementRef
   ) {}
 
   ngOnInit(): void {
     combineLatest([
       this.height$,
       this.width$,
+      this.charWidth$,
+      this.classification.bookViewportWidth$.pipe(distinctUntilChanged()),
       this.classification.textSegments$,
       this.classification.chapterSegments$,
-      this.scrollService.bookViewportHeight$,
-    ]).subscribe(([height, width, segments, chapterSegments]) =>
-      this.updateCanvas(height, width, segments, chapterSegments)
+    ]).subscribe(
+      ([
+        height,
+        width,
+        charWidth,
+        bookViewportWidth,
+        segments,
+        chapterSegments,
+      ]) =>
+        this.updateCanvas(
+          height,
+          width,
+          charWidth,
+          bookViewportWidth,
+          segments,
+          chapterSegments
+        )
     );
+
     combineLatest([
       this.height$,
       this.width$,
-      this.scrollService.rangePercentage$,
-    ]).subscribe(([height, width, range]) =>
-      this.updateRange(range[0], range[1], width, height)
+      this.scrollService.scrolledToIndex$,
+    ]).subscribe(([height, width, firstIndex]) =>
+      this.updateRange(firstIndex, width, height)
     );
   }
 
   ngAfterViewInit() {
     this.resizeObserver = new ResizeObserver(() => this.resize());
-    this.resizeObserver.observe(this.canvas.nativeElement);
+    this.resizeObserver.observe(this.hostEl.nativeElement);
   }
 
   ngOnDestroy() {
@@ -65,41 +88,56 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public resize() {
-    this.canvas.nativeElement.height = this.canvas.nativeElement.clientHeight;
-    this.canvas.nativeElement.width = this.canvas.nativeElement.clientWidth;
-    this.position.nativeElement.height = this.position.nativeElement.clientHeight;
-    this.position.nativeElement.width = this.position.nativeElement.clientWidth;
+    this.canvas.nativeElement.height = this.hostEl.nativeElement.clientHeight;
+    this.canvas.nativeElement.width = this.hostEl.nativeElement.clientWidth;
+    this.position.nativeElement.height = this.hostEl.nativeElement.clientHeight;
+    this.position.nativeElement.width = this.hostEl.nativeElement.clientWidth;
     this.height$.next(this.canvas.nativeElement.clientHeight);
     this.width$.next(this.canvas.nativeElement.clientWidth);
+    this.calculateCharWidth();
+  }
+
+  private calculateCharWidth() {
+    const spanElement = document.createElement('span');
+    spanElement.innerText = 'a';
+    spanElement.style.position = 'absolute';
+    document.body.appendChild(spanElement);
+    this.charWidth$.next(spanElement.getBoundingClientRect().width);
+    document.body.removeChild(spanElement);
   }
 
   private updateCanvas(
     height: number,
     width: number,
+    charWidth: number,
+    bookViewportWidth: number,
     segments: ClassifiedTextSegment[],
     chapterSegments: number[]
   ) {
     const context = this.canvas.nativeElement.getContext('2d');
     if (context) {
       context.clearRect(0, 0, width, height);
-      const segmentHeights = segments.map((segment) =>
-        this.getRenderedHeight(segment)
+      this.segmentHeights = segments.map((segment) =>
+        this.getRenderedHeight(segment, charWidth, bookViewportWidth)
       );
-      const segmentHeightsSum = segmentHeights.reduce(
+      const segmentHeightsSum = this.segmentHeights.reduce(
         (sum, segmentHeight) => sum + segmentHeight,
         0
       );
-      const renderSegmentHeights = segmentHeights.map(
+      this.renderSegmentHeights = this.segmentHeights.map(
         (originalHeight) => (originalHeight / segmentHeightsSum) * height
       );
-      const segmentEnds = renderSegmentHeights.reduce((sums, segmentHeight) => {
-        if (sums.length === 0) {
-          sums.push(segmentHeight);
-        } else {
-          sums.push(segmentHeight + sums[sums.length - 1]);
-        }
-        return sums;
-      }, new Array<number>());
+      const segmentEnds = this.renderSegmentHeights.reduce(
+        (sums, segmentHeight) => {
+          if (sums.length === 0) {
+            sums.push(segmentHeight);
+          } else {
+            sums.push(segmentHeight + sums[sums.length - 1]);
+          }
+          return sums;
+        },
+        new Array<number>()
+      );
 
       segments.forEach((segment, i) => {
         context.fillStyle = this.classification.toRgb(segment.color);
@@ -108,10 +146,10 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
             0,
             segmentEnds[i - 1],
             width,
-            renderSegmentHeights[i]
+            this.renderSegmentHeights[i]
           );
         } else {
-          context.fillRect(0, 0, width, renderSegmentHeights[i]);
+          context.fillRect(0, 0, width, this.renderSegmentHeights[i]);
         }
       });
       chapterSegments.forEach((position) => {
@@ -126,38 +164,49 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private getRenderedHeight(segment: ClassifiedTextSegment): number {
-    const el = document.querySelector(`span[id='segment-${segment.start}']`);
-    if (el) {
-      return (el as HTMLElement).offsetHeight;
+  private getRenderedHeight(
+    segment: ClassifiedTextSegment,
+    charWidth: number,
+    viewportWidth: number
+  ): number {
+    const charsPerLine = Math.floor(viewportWidth / charWidth);
+    let text = segment.text;
+    let lines = 1;
+    while (text.length > charsPerLine) {
+      if (text.indexOf('\n') !== -1 && text.indexOf('\n') < charsPerLine) {
+        text = text.slice(text.indexOf('\n') + 1);
+      } else {
+        text = text.slice(charsPerLine); // This can be optimized by skipping multiple newlines
+      }
+      lines++;
     }
-    return 1;
+
+    return lines;
   }
 
-  private updateRange(
-    start: number,
-    end: number,
-    width: number,
-    height: number
-  ) {
+  private updateRange(firstIndex: number, width: number, height: number) {
+    if (!this.renderSegmentHeights) {
+      return;
+    }
+    const topPosition = this.renderSegmentHeights
+      .slice(0, firstIndex)
+      .reduce((sum, height) => sum + height, 0);
     const context = this.position.nativeElement.getContext('2d');
     if (context) {
       context.clearRect(0, 0, width, height);
       context.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      context.fillRect(0, start * height, width, (end - start) * height);
+      context.fillRect(0, topPosition, width, height * 0.01);
     }
   }
 
   public scrollTo(event: MouseEvent | TouchEvent) {
-    if (this.isMouseEvent(event)) {
-      this.scrollService.center$.next(
-        event.offsetY / this.canvas.nativeElement.height
-      );
-    } else {
-      this.scrollService.center$.next(
-        event.touches[0].clientY / this.canvas.nativeElement.height
-      );
-    }
+    const yPosition = this.isMouseEvent(event)
+      ? event.offsetY
+      : event.touches[0].clientY;
+
+    this.scrollService.offsetPercentage$.next(
+      yPosition / this.canvas.nativeElement.clientHeight
+    );
   }
 
   private isMouseEvent(event: MouseEvent | TouchEvent): event is MouseEvent {
