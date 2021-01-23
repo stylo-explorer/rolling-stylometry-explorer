@@ -30,7 +30,8 @@ import { createCustomElement } from '@angular/elements';
 import { SummaryComponent } from './summary/summary.component';
 import { SideBySideComponent } from './side-by-side/side-by-side.component';
 import { MatSelectModule } from '@angular/material/select';
-
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { BookScrollingViewportDirective } from './book/book.scrolling-strategy';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
     ConfigComponent,
     SummaryComponent,
     SideBySideComponent,
+    BookScrollingViewportDirective,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +65,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     FormsModule,
     MatMenuModule,
+    ScrollingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
