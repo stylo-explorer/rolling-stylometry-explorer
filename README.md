@@ -7,7 +7,7 @@
 </p>
 
 The Rolling Stylometry Explorer is a web application to visualize rolling.classify results in the analyzed text. It was developed as a tool for use with the <a href="https://github.com/computationalstylistics/stylo">stylo R library</a> by the <a href="https://computationalstylistics.github.io/">Computational Stylistics Group</a>.
-
+Take a look <a href="https://stylo-explorer.github.io/">here for the Live-Demo and the full documentation</a>.
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](https://opensource.org/licenses/MIT) [![Website shields.io](https://img.shields.io/website-up-down-black-red/http/shields.io.svg)](https://stylo-explorer.jnugh.de/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-black.svg?style=flat-square)](http://makeapullrequest.com) <a href="https://doi.org/10.5281/zenodo.4438291"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4438291.svg" alt="DOI"></a>
