@@ -20,7 +20,7 @@ Take a look <a href="https://stylo-explorer.github.io/">here for the Live-Demo a
 - Display your rolling.classify results directly in the text
 - Switch easily between different analyses and MFW values
 - Use the Tooltip Feature to see the probabilities for each author
-- Use the Gradient Feature and have the security of the authorship attribution displayed directly in the text
+- Use the Gradient Feature and have the security of the authorship attribution displayed directly in the text (still work in progress)
 - Keep track of the configurations of the various analyses displayed in the Rolling Stylometry Explorer - transfer the configurations and have them displayed directly in the Explorer
 
 ## <img src="docs/baseline_format_list_numbered_black_48dp.png" width="20"> How to use </img>
