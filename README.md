@@ -47,7 +47,7 @@ Just open a pull request :smile_cat:
 
 ## <img src="docs/baseline_menu_book_black_48dp.png" width="20"> How to Cite </img>
 In case you want to cite us (we would appreciate it!)
-(DOI goes here)
+<a href="https://doi.org/10.5281/zenodo.4438291"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4438291.svg" alt="DOI"></a>
 
 ## <img src="docs/baseline_article_black_48dp.png" width="20"> Credits & Acknowledgements </img>
 
