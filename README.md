@@ -30,7 +30,7 @@ Take a look <a href="https://stylo-explorer.github.io/">here for the Live-Demo a
 3. Move the `create_json_rolling.classify` into the folder containing the corpus. Paste your rolling.classify configuration into the `create_json_rolling.classify` file and execute it. It will perform the rolling.classify analysis you configured and generate a `classification.json` file with the results.
 4. Execute the `json-consolidate.tx` file. Add the file path to the classification.json file(s). Follow the further instructions in the shell to provide information about the configurations, the analyzed text and possible authors. `json-consolidate` will then generate a `output.json` file.
 5. Move the generated `output.json` file to `~/rolling-classify-visualizer/src/assets`
-6. Implement the Rolling Sylometry Explorer on your website
+6. Implement the Rolling Sylometry Explorer on your website (or try it out <a href="https://stylo-explorer.github.io/pages/try-it.html">here</a>)
 
 If you want to integrate multiple analyses into the Rolling Stylometry Explorer, repeat steps 1-3 and then pass multiple file paths 
 
