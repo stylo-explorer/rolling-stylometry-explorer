@@ -10,18 +10,11 @@ import { throttleTime, map, skipUntil } from 'rxjs/operators';
 
 type Range = [number, number];
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ScrollService {
-  public readonly offset$ = new Subject<{senderId: number, offset: number}>();
+  public readonly offset$ = new Subject<{ senderId: number; offset: number }>();
   public readonly scrolledToIndex$ = new Subject<number>();
   public readonly offsetPercentage$ = new Subject<number>();
-  
 
-  constructor() {
-    
-  }
-
- 
+  constructor() {}
 }

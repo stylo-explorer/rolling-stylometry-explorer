@@ -8,9 +8,7 @@ import {
   InputData,
 } from './classification.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class DataService {
   public readonly book$ = new ReplaySubject<string>(1);
   public readonly title$: Observable<string>;
@@ -21,7 +19,6 @@ export class DataService {
     ClassificationSettingsAndResults[]
   >;
   constructor(http: HttpClient) {
-    this.rawClassificationData$.subscribe(console.log);
     this.title$ = this.rawClassificationData$.pipe(map((data) => data.title));
     this.year$ = this.rawClassificationData$.pipe(map((data) => data.year));
     this.authorData$ = this.rawClassificationData$.pipe(

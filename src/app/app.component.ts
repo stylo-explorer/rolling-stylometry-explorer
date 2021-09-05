@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
+import { ScrollService } from './book/scroll.service';
 import { ClassificationService, InputData } from './classification.service';
 import { DataService } from './data.service';
 
 @Component({
-  selector: 'stylo-explorer',
+  selector: 'app-stylo-explorer',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  providers: [DataService, ScrollService],
 })
 export class AppComponent {
   private _inputUrls: boolean | 'true' | 'false' = true;
