@@ -13,9 +13,7 @@ import {
 import { ScrollService } from './scroll.service';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  CdkVirtualScrollViewport,
-} from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-book',
@@ -26,7 +24,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
   private static instanceCounter = 0;
   private instanceId: number;
   public segmentPositions: Observable<number[]>;
-  private scrollSubscriber = new Subscription();
+  private subscriptions = new Subscription();
 
   private renderWidth = new Subject<number>();
   private lineHeight = new Subject<number>();
@@ -45,11 +43,13 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
   public ngAfterViewInit(): void {
     this.instanceId = BookComponent.instanceCounter++;
-    this.classification.textSegments$.subscribe((segments) => {
-      setTimeout(() => {
-        this.resize();
-      });
-    });
+    this.subscriptions.add(
+      this.classification.textSegments$.subscribe((segments) => {
+        setTimeout(() => {
+          this.resize();
+        });
+      })
+    );
     this.segmentPositions = combineLatest([
       this.classification.textSegments$,
       this.charWidth,
@@ -67,16 +67,20 @@ export class BookComponent implements AfterViewInit, OnDestroy {
         })
       )
     );
-    this.scroll.offset$.subscribe(({ offset, senderId }) => {
-      if (senderId !== this.instanceId) {
-        this.bookContentEl.scrollToOffset(offset);
-      }
-    });
-    this.scroll.offsetPercentage$.subscribe((percentage) => {
-      this.bookContentEl.scrollToOffset(
-        percentage * Number.parseFloat(this.bookContentEl._totalContentHeight)
-      );
-    });
+    this.subscriptions.add(
+      this.scroll.offset$.subscribe(({ offset, senderId }) => {
+        if (senderId !== this.instanceId) {
+          this.bookContentEl.scrollToOffset(offset);
+        }
+      })
+    );
+    this.subscriptions.add(
+      this.scroll.offsetPercentage$.subscribe((percentage) => {
+        this.bookContentEl.scrollToOffset(
+          percentage * Number.parseFloat(this.bookContentEl._totalContentHeight)
+        );
+      })
+    );
   }
 
   public viewportScroll() {
@@ -91,7 +95,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.scrollSubscriber.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   public trackByStart(_: number, segment: ClassifiedTextSegment) {
