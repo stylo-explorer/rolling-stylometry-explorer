@@ -11,7 +11,7 @@ import {
   ClassificationService,
   ClassifiedTextSegment,
 } from '../classification.service';
-import { combineLatest, ReplaySubject } from 'rxjs';
+import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
 import { ScrollService } from '../book/scroll.service';
 import ResizeObserver from 'resize-observer-polyfill';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
@@ -36,6 +36,8 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
   public dragging = false;
   private resizeObserver: ResizeObserver;
 
+  private subscriptions = new Subscription();
+
   constructor(
     private classification: ClassificationService,
     private scrollService: ScrollService,
@@ -43,38 +45,42 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.height$,
-      this.width$,
-      this.charWidth$,
-      this.classification.bookViewportWidth$.pipe(distinctUntilChanged()),
-      this.classification.textSegments$,
-      this.classification.chapterSegments$,
-    ]).subscribe(
-      ([
-        height,
-        width,
-        charWidth,
-        bookViewportWidth,
-        segments,
-        chapterSegments,
-      ]) =>
-        this.updateCanvas(
+    this.subscriptions.add(
+      combineLatest([
+        this.height$,
+        this.width$,
+        this.charWidth$,
+        this.classification.bookViewportWidth$.pipe(distinctUntilChanged()),
+        this.classification.textSegments$,
+        this.classification.chapterSegments$,
+      ]).subscribe(
+        ([
           height,
           width,
           charWidth,
           bookViewportWidth,
           segments,
-          chapterSegments
-        )
+          chapterSegments,
+        ]) =>
+          this.updateCanvas(
+            height,
+            width,
+            charWidth,
+            bookViewportWidth,
+            segments,
+            chapterSegments
+          )
+      )
     );
 
-    combineLatest([
-      this.height$,
-      this.width$,
-      this.scrollService.scrolledToIndex$,
-    ]).subscribe(([height, width, firstIndex]) =>
-      this.updateRange(firstIndex, width, height)
+    this.subscriptions.add(
+      combineLatest([
+        this.height$,
+        this.width$,
+        this.scrollService.scrolledToIndex$,
+      ]).subscribe(([height, width, firstIndex]) =>
+        this.updateRange(firstIndex, width, height)
+      )
     );
   }
 
@@ -85,6 +91,7 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.resizeObserver.disconnect();
+    this.subscriptions.unsubscribe();
   }
 
   public resize() {

@@ -85,7 +85,7 @@ export class ClassificationService {
   public enableTooltip = false;
   public readonly mfw$ = new BehaviorSubject<number>(0);
   public readonly classification$: Observable<Array<ClassificationData>>;
-  
+
   public readonly type$ = new BehaviorSubject<string>('');
   public readonly mfwMin$: Observable<number>;
   public readonly mfwMax$: Observable<number>;

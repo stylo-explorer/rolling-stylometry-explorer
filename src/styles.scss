@@ -146,7 +146,7 @@ $mat-dark-theme-background: (
 
 // Theme Config
 
-body {
+stylo-explorer {
   --primary-color: #101010;
   --primary-lighter-color: #b7b7b7;
   --primary-darker-color: #090909;
@@ -170,7 +170,7 @@ $mat-primary: (
 );
 $theme-primary: mat-palette($mat-primary, main, lighter, darker);
 
-body {
+stylo-explorer {
   --accent-color: #101010;
   --accent-lighter-color: #b7b7b7;
   --accent-darker-color: #090909;
@@ -194,7 +194,7 @@ $mat-accent: (
 );
 $theme-accent: mat-palette($mat-accent, main, lighter, darker);
 
-body {
+stylo-explorer {
   --warn-color: #8d4646;
   --warn-lighter-color: #ddc8c8;
   --warn-darker-color: #702f2f;
@@ -253,8 +253,7 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
   }
 }
 
-html,
-body {
+stylo-explorer {
   height: 100%;
   margin: 0;
   font-family: "Ubuntu Mono";
