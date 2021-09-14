@@ -1,6 +1,12 @@
 {
   "name": "rolling-classify-visualizer",
-  "version": "0.0.0",
+  "version": "0.1.4",
+  "homepage": "https://stylo-explorer.github.io/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stylo-explorer/rolling-stylometry-explorer.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -12,7 +18,7 @@
     "el-build-task": "ng build --prod --output-hashing=none",
     "el-package-task": "cat ./dist/rolling-classify-visualizer/*-es2015.js > ./dist/rolling-classify-visualizer.js"
   },
-  "private": true,
+  "main": "dist/rolling-classify-visualizer.js",
   "dependencies": {
     "@angular/animations": "^10.0.14",
     "@angular/cdk": "^10.2.5",
