@@ -22,23 +22,15 @@ Take a look <a href="https://stylo-explorer.github.io/">here for the Live-Demo a
 - Keep track of the configurations of the various analyses displayed in the Rolling Stylometry Explorer - transfer the configurations and have them displayed directly in the Explorer
 
 ## <img src="https://github.com/stylo-explorer/rolling-stylometry-explorer/raw/master/docs/baseline_format_list_numbered_black_48dp.png" width="20"> How to use </img>
+You can find the Quickstart-Tutorial <a href="https://stylo-explorer.github.io/pages/documentation.html#Quickstart">here</a>
 
-1. Download the Rolling Stylometry Explorer
-2. Prepare your corpus
-3. Move the `create_json_rolling.classify` into the folder containing the corpus. Paste your rolling.classify configuration into the `create_json_rolling.classify` file and execute it. It will perform the rolling.classify analysis you configured and generate a `classification.json` file with the results.
-4. Execute the `json-consolidate.tx` file. Add the file path to the classification.json file(s). Follow the further instructions in the shell to provide information about the configurations, the analyzed text and possible authors. `json-consolidate` will then generate a `output.json` file.
-5. Move the generated `output.json` file to `~/rolling-classify-visualizer/src/assets`
-6. Implement the Rolling Sylometry Explorer on your website (or try it out <a href="https://stylo-explorer.github.io/pages/try-it.html">here</a>)
-
-If you want to integrate multiple analyses into the Rolling Stylometry Explorer, repeat steps 1-3 and then pass multiple file paths
-
-<p align="center">
-<img src="https://github.com/stylo-explorer/rolling-stylometry-explorer/raw/master/docs/demo2.gif" width="600">
-</p>
 
 ## <img src="https://github.com/stylo-explorer/rolling-stylometry-explorer/raw/master/docs/baseline_search_black_48dp.png" width="20"> How it works </img>
 
 Rolling.classify performs a windowing procedure and divides the text into short, overlapping sections. Rolling.classify then uses a machine learning algorithm to assign an author to each section. The Rolling Stylometry Explorer divides the text into the same sections as rolling.classify. The assignment made by rolling.classify is then made visible in the text by color highlighting. Each author is assigned a color. The most probable author for the corresponding text section is determined using the probabilities calculated by rolling.classify.
+<p align="center">
+<img src="https://github.com/stylo-explorer/rolling-stylometry-explorer/raw/master/docs/demo2.gif" width="600">
+</p>
 
 ## <img src="https://github.com/stylo-explorer/rolling-stylometry-explorer/raw/master/docs/baseline_create_black_48dp.png" width="20"> How to Contribute </img>
 
