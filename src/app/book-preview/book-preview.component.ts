@@ -176,6 +176,9 @@ export class BookPreviewComponent implements OnInit, OnDestroy, AfterViewInit {
     charWidth: number,
     viewportWidth: number
   ): number {
+    if (viewportWidth <= 0) {
+      return 1;
+    }
     const charsPerLine = Math.floor(viewportWidth / charWidth);
     let text = segment.text;
     let lines = 1;
